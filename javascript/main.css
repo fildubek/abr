@@ -1,0 +1,25 @@
+body{
+    background-color: black;
+    color: white;
+}
+p{
+    font-size: 12px;
+}
+#arena{
+    border:1px solid white;
+}
+
+.mainArea{
+    display:flex;
+    justify-content: center;
+}
+
+#story{
+    display:flex;
+    justify-content: center;   
+}
+.GameName{
+    text-align: center;
+    font-weight: bold;
+    font-size: 34px;
+}
