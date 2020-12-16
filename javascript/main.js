@@ -2,6 +2,7 @@
 var begin = false;
 var c = document.getElementById("arena");
 var ctx = c.getContext("2d");
+ctx.font = "30px Arial";
 var targetX = 390;
 var targetY = 200;
 var bulletY = 400
@@ -32,7 +33,7 @@ function draw(){
      if(monster == 3){
 	monster3();
     }
-    
+    screenText();
     ctx.strokeStyle = 'white';
     ctx.stroke();
     // call draw livebars function
@@ -384,14 +385,22 @@ function monster3(){
     ctx.lineTo(200, 350);
 }
 
+//Draw Text Under robot
+ 
+function screenText(){
+    ctx.fillStyle = "white";
+    ctx.fillText("Target on enemy. Zoom factor 10x", 200, 390); 
+}
+
 
 // Draw livebars 
 
 function livebars(){
      var lPosition = 0;
-    for (var i=0; i<=lives; i++){
-        ctx.fillRect(780+lPosition, 250, 20, 50);
-        ctx.fillStyle = "white";
+     ctx.fillStyle = "white";
+     ctx.fillText("Energy", 860, 230); 
+    for (var i=0; i<lives; i++){
+        ctx.fillRect(860+lPosition, 250, 20, 50);
         ctx.stroke();
         lPosition += 40;
     }
