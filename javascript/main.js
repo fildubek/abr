@@ -48,10 +48,10 @@ function keyControl(evt){
 		 if(begin===false){
 			 init();
              begin = true;
-             document.getElementById('story').innerText="|  1. Missle type 3  | | 2."+
-             " Missle type 1000  | |3. Missle type 77 | |  4.Missle type 5  |  5. Missle Type 84  |";
+             document.getElementById('story').innerText="|  1. Missile type 3  | | 2."+
+             " Missile type 1000  | |3. Missile type 77 | |  4.Missile type 5  |  5. Missile Type 84  |";
 		 }
-	      document.getElementById('subtitle').innerText="Choose correct missle to destroy the Alien Robot"	 
+	      document.getElementById('subtitle').innerText="Choose correct missile to destroy the Alien Robot"	 
 	break;
 	// Key Press 1
 	 case 49:
