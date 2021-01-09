@@ -4,13 +4,14 @@
 
 const int AMPLITUDE = 12000;
  int SAMPLE_RATE = 44100;
-
+int lives = 3;
 
 void audio_callback(void *user_data, Uint8 *raw_buffer, int bytes)
 {
     Sint16 *buffer = (Sint16*)raw_buffer;
     int length = bytes / 2; // 2 bytes per sample for AUDIO_S16SYS
-    int &sample_nr(*(int*)user_data);
+    int sample_nr = 77656;
+    
 
     for(int i = 0; i < length; i++, sample_nr++)
     {
@@ -132,13 +133,18 @@ void drawRobotHead(SDL_Renderer* renderer){
 
 //Draws the Live Bars
 
-void drawLiveBars(SDL_Renderer* renderer, int &lives ){
+void drawLiveBars(SDL_Renderer* renderer, int* lives ){
     int x = 0;
 	int i;
+	int l = *lives;
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	 
-	 for (i=0; i<lives; i++){
-		SDL_Rect rect{840+x, 230, 30, 90}; 
+	 for (i=0; i<l; i++){
+		SDL_Rect rect;
+		rect.x = 840+x;
+		rect.y = 230;
+		rect.w = 30;
+		rect.h = 90;
 		SDL_RenderFillRect(renderer, &rect);
 		x+=50;
 	 }
@@ -248,8 +254,9 @@ void drawTarget(SDL_Renderer* renderer){
 	
 }
 
-void success(SDL_Renderer* renderer, int &hit, int &evilRobot, int &attackOption){
-	hit = 0;
+void success(SDL_Renderer* renderer, int* hit, int* evilRobot, int* attackOption){
+	*hit = 0;
+	int er = *evilRobot;
 	SAMPLE_RATE = 20000;
 	SDL_PauseAudio(0);
 	SDL_Delay(400); 
@@ -259,24 +266,29 @@ void success(SDL_Renderer* renderer, int &hit, int &evilRobot, int &attackOption
                          "Success",
                          "Direct hit with correct missile!",
                          NULL);   
-	if(evilRobot < 2){
-		evilRobot +=1;
-		attackOption = 0;
+	if(er < 2){
+		er +=1;
+		*evilRobot = er;
+		*attackOption = 0;
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		SDL_Rect rect{0, 0, 800, 400}; 
+		SDL_Rect rect;
+		rect.x = 0;
+		rect.y = 0;
+		rect.w = 800;
+		rect.h = 200;
 		SDL_RenderFillRect(renderer, &rect);
 		SDL_RenderPresent(renderer);
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-		if(evilRobot == 1){
+		if(er == 1){
 			drawEvilRobot2(renderer);
 		}
-		if(evilRobot == 2){
+		if(er == 2){
 			drawEvilRobot3(renderer);
 		}
 		
 	}
 	else{
-		attackOption = 99;
+		*attackOption = 99;
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
                          "Victory",
                          "All enemies in the area were defeated Mission 2 Completed \n Receiving update from headquaters - READY FOR NEXT MISSION ",
@@ -285,19 +297,24 @@ void success(SDL_Renderer* renderer, int &hit, int &evilRobot, int &attackOption
 	
 }
 
-void failed(SDL_Renderer* renderer, int &hit, int &lives, int &attackOption){
-	hit = 0;
+void failed(SDL_Renderer* renderer, int* hit, int* lives, int* attackOption){
+	*hit = 0;
 	SDL_PauseAudio(0); 
 	SDL_Delay(1000); 
 	SDL_PauseAudio(1);
-
 	SDL_CloseAudio();
+	int l = *lives; 
             
-	if(lives >0){
-		lives -=1;
-		attackOption = 0;
+	if(l >0){
+		l -=1;
+		*lives = l;
+		*attackOption = 0;
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		SDL_Rect rect{800, 200, 200, 200}; 
+		SDL_Rect rect;
+		rect.x = 800;
+		rect.y = 200;
+		rect.w = 200;
+		rect.h = 200;
 		SDL_RenderFillRect(renderer, &rect);
 		drawLiveBars(renderer, lives);
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
@@ -306,10 +323,10 @@ void failed(SDL_Renderer* renderer, int &hit, int &lives, int &attackOption){
 							 NULL);   
 	}
 	else{
-		attackOption = 99;
+		*attackOption = 99;
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
 							 "Dead",
-							 "You got hit too many times you are dead!",
+							 "You got hit too many times, you are dead!",
 							 NULL);   
 	}
 
@@ -318,10 +335,10 @@ void failed(SDL_Renderer* renderer, int &hit, int &lives, int &attackOption){
 
 // Draws everything on Screen
 
-void draw(SDL_Renderer* renderer, int &lives, int &evilRobot, int &hit, int &attackOption){
-	
+void draw(SDL_Renderer* renderer, int* lives, int* evilRobot, int* hit, int* attackOption){
+	int er = *evilRobot;
+	int h = *hit;
 	//arena
-	
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 	SDL_RenderDrawLine(renderer, 800, 0, 800, 400);
 	SDL_RenderDrawLine(renderer, 800, 200, 1000, 200);
@@ -336,15 +353,14 @@ void draw(SDL_Renderer* renderer, int &lives, int &evilRobot, int &hit, int &att
 	//call mountain Range
 	
 	drawMountainRange(renderer);
-	
 	//call evil Robots
-	if(evilRobot == 0){
+	if(er == 0){
 		drawEvilRobot1(renderer);
 	}
-	if(evilRobot == 1){
+	if(er== 1){
 		drawEvilRobot2(renderer);
 	}
-	if(evilRobot == 2){
+	if(er == 2){
 		drawEvilRobot3(renderer);
 	}
 	
@@ -352,18 +368,18 @@ void draw(SDL_Renderer* renderer, int &lives, int &evilRobot, int &hit, int &att
 	
 	drawTarget(renderer);
 	
-	if(hit == 1){
+	if(h == 1){
 		success(renderer, hit, evilRobot,  attackOption);
 	}
 	
-	if(hit == -1){
+	if(h == -1){
 		failed(renderer, hit, lives, attackOption);
 	}
 	
 	SDL_RenderPresent(renderer);
 }
 
-int main() 
+int main(int argc, char* argv[])
 { 
   int attackOption = 0;
   int evilRobot = 0;
@@ -382,15 +398,14 @@ int main()
           
 			 if(SDL_Init(SDL_INIT_AUDIO) != 0) SDL_Log("Failed to initialize SDL: %s", SDL_GetError());	
             // Intro message before game starts
-           
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
                          "Story",
                          "It all begun 5 years ago, robots appeared the sky out of now here and attacked. \nEarth tried to defend itself but we lost. \nSo we went into hidding in nuclear bunkers.  \n \nINFO:  | | | 3 Bars on the right are your Energy.",
                          NULL);   
 				             
 		
-            while (!done) {
-                SDL_Event event;
+            while (!done) {			
+                  SDL_Event event;
                 
 				  //Main scenes
 				  
@@ -404,52 +419,53 @@ int main()
 				  want.userdata = &sample_nr; // counter, keeping track of current sample number
 
 				 SDL_AudioSpec have;
-				if(SDL_OpenAudio(&want, &have) != 0) SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Failed to open audio: %s", SDL_GetError());
-				if(want.format != have.format) SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Failed to get the desired AudioSpec");
+				 if(SDL_OpenAudio(&want, &have) != 0) SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Failed to open audio: %s", SDL_GetError());
+				 if(want.format != have.format) SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Failed to get the desired AudioSpec");
 				
-				 draw(renderer, lives, evilRobot, hit, attackOption);
-
+				 // draw everything
+				 draw(renderer, &lives, &evilRobot, &hit, &attackOption);
+				 
 				 // call attack option when no attack is choosen
 				 
 				 if(attackOption == 0){
 					attackOption = attackOptions();	
-				}
-				if(attackOption == 99){
+				 }
+				 if(attackOption == 99){
 					done = SDL_TRUE;
-				}
+				 }
 				
-				if(evilRobot == 0){
+				 if(evilRobot == 0){
 					 if(attackOption == 2){
 						 hit = 1;
 					 }
 					 else{
 						 hit = -1;
 					 }
-				}
+				 }
 				
-				if(evilRobot == 1){
+				 if(evilRobot == 1){
 					 if(attackOption == 4){
 						 hit = 1;
 					 }
 					 else{
 						 hit = -1;
 					 }
-				}
+				 }
 				
-				if(evilRobot == 2){
+				 if(evilRobot == 2){
 					 if(attackOption == 1){
 						 hit = 1;
 					 }
 					 else{
 						 hit = -1;
 					 }
-				}
+				 }
 				
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-                SDL_RenderClear(renderer);
+                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                 SDL_RenderClear(renderer);
 
                 
-                while (SDL_PollEvent(&event)) {
+                 while (SDL_PollEvent(&event)) {
                     if (event.type == SDL_QUIT) {
                         done = SDL_TRUE;
                     }
