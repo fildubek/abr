@@ -170,7 +170,7 @@ SUB robotBoss (robot)
         LOCATE 6, 4
         PRINT "#000000"
     END IF
-    IF robot = 3 THEN
+    IF robot = 2 THEN
         LOCATE 5, 4
         PRINT "NEW WEAKNESS DETECTED"
         LOCATE 6, 4
