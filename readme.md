@@ -7,6 +7,8 @@ This is part of my personal challenge to create a simple game and the create var
 First Version is done in Javascript<br>
 Second Version is done in C<br>
 Third Version is done in Python<br>
+Fourth Version is done in QBasic<br>
+Fifth Version is done in C++<br>
 
 Each version will be different and unique but will have similar gameplay.
 
